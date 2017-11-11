@@ -83,17 +83,19 @@ function loadCssFile() {
 // Handle key presses
 document.onkeypress = function (e) {
 e = e || window.event;
+keyCode = e.keyCode || e.which;
+
 // console.log(e.keyCode);
-if (e.keyCode == 108) {
+if (keyCode == 108) {
   loadNextCodeFile();
 } 
-else if (e.keyCode == 104) {
+else if (keyCode == 104) {
   loadPreviousCodeFile();
 } 
-else if (e.keyCode == 106) {
+else if (keyCode == 106) {
   loadNextCssFile();
 } 
-else if (e.keyCode == 107) {
+else if (keyCode == 107) {
   loadPreviousCssFile();
 } 
 };
