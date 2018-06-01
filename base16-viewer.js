@@ -67,17 +67,17 @@ function loadCodeFile(url) {
   code_call.open('GET', code_files[code_index].download_url, true);
   code_call.send();
 
-  document.getElementById('base16-viewer-language-text').innerHTML = code_files[code_index].name.split('.')[0];
+  document.getElementById('base16-viewer-language-text').selectedIndex = code_index;
 }
 
 function loadCssFile() {
 
   // Load new css file
   document.getElementById('base16-viewer-css').href = css_files[css_index].download_url.replace("raw.githubusercontent.com", "cdn.rawgit.com");
-  document.getElementById('base16-viewer-scheme-text').innerHTML = css_files[css_index].name.split('.')[0];
+  document.getElementById('base16-viewer-scheme-text').selectedIndex = css_index;
 
   // Update scheme index
-  document.getElementById('base16-viewer-scheme-index').innerHTML = css_index + 1;
+  document.getElementById('base16-viewer-scheme-index').selectedIndex = css_index + 1;
 }
 
 // Handle key presses
@@ -113,8 +113,8 @@ document.write('\
   <pre id="base16-viewer-code" class="base00-background base05"></pre>\
   \
   <div id="base16-viewer-info" class="base03 base01-background">\
-    <div id="base16-viewer-scheme">Scheme <span id="base16-viewer-scheme-index">1</span> of <span id="base16-viewer-scheme-count">1</span>: <span id="base16-viewer-scheme-text" class="base04"></span></div>\
-    <div id="base16-viewer-language">Language: <span id="base16-viewer-language-text" class="base04"></span></div>\
+    <div id="base16-viewer-scheme">Scheme <span id="base16-viewer-scheme-index">1</span> of <span id="base16-viewer-scheme-count">1</span>: <select id="base16-viewer-scheme-text" class="base04"></select></div>\
+    <div id="base16-viewer-language">Language: <select id="base16-viewer-language-text" class="base04"></select></div>\
   </div>\
 </div>');
 
@@ -123,6 +123,17 @@ var code_call = new XMLHttpRequest();
 code_call.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     code_files = JSON.parse(this.responseText);
+    var select = document.getElementById('base16-viewer-language-text');
+    select.onchange = function(){
+      code_index = select.selectedIndex;
+      loadCodeFile();
+    }
+    for (var i=0; i < code_files.length; i++) {
+      var opt = document.createElement('option');
+      opt.value = code_files[i].name;
+      opt.innerHTML = code_files[i].name.split('.')[0];
+      select.appendChild(opt);
+    }
     loadCodeFileName('ruby');
   }
 };
@@ -134,6 +145,17 @@ var css_call = new XMLHttpRequest();
 css_call.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     css_files = JSON.parse(this.responseText);
+    var select = document.getElementById('base16-viewer-scheme-text');
+    select.onchange = function(){
+      css_index = select.selectedIndex;
+      loadCssFile();
+    }
+    for (var i=0; i < css_files.length; i++) {
+      var opt = document.createElement('option');
+      opt.value = css_files[i].name;
+      opt.innerHTML = css_files[i].name.split('.')[0];
+      select.appendChild(opt);
+    }
     loadCssFileName('base16-default-dark');
     document.getElementById('base16-viewer-scheme-count').innerHTML = css_files.length;
   }
